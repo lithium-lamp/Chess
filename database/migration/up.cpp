@@ -3,6 +3,7 @@
 #include <pqxx/pqxx>
 #include "dotenv.h"
 #include "dbconn.h"
+#include "migrate.h"
 
 /* .env variables
 
@@ -30,5 +31,5 @@ int main() {
 
     DBConn conn(DSN);
 
-    conn.addSchema();
+    migrateup(&conn.conn);
 }

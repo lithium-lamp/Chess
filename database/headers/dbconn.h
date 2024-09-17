@@ -20,13 +20,5 @@ public:
 		std::cout << r[0].as<int>() << std::endl;
 	}
 
-	void addSchema() {
-		std::cout << "adding schema ..." << std::endl;
-	}
-
-	void deleteSchema() {
-		std::cout << "deleting schema ..." << std::endl;
-	}
-
 	pqxx::connection conn;
 };
