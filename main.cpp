@@ -1,41 +1,41 @@
 #include <stdlib.h>
 #include <iostream>
+#include <pqxx/pqxx>
+#include "dotenv.h"
+#include "dbconn.h"
 
-#include "mysql_connection.h"
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/prepared_statement.h>
+#include "game/headers/chess.h"
 
-#include "chess.h"
+/* .env variables
 
-using namespace std;
+DB_HOST
+DB_PORT
+DB_USERNAME
+DB_PASSWORD
+DB_NAME
+DB_DSN
+PGADMIN_EMAIL
+PGADMIN_PASSWORD
+PGADMIN_HOST
 
-//remove passwords, server data
-const string server = xxxxxxxxx;
-const string username = xxxxxx;
-const string password = xxxxxxxx;
+*/
 
+int main() {
+    dotenv::init();
 
+    char const* caught_dsn = std::getenv("DB_DSN");
 
-int main()
-{
-    sql::Driver* driver;
-    sql::Connection* con;
-    sql::Statement* stmt;
-    sql::PreparedStatement* pstmt;
-    sql::ResultSet* res;
+    if (!caught_dsn)
+        return 1;
 
-    try
-    {
-        driver = get_driver_instance();
-        con = driver->connect(server, username, password);
-    }
-    catch (sql::SQLException e)
-    {
-        cout << "Could not connect to server. Error message: " << e.what() << endl;
-        system("pause");
-        exit(1);
-    }
+    const char* DSN[] {caught_dsn};
+
+    DBConn conn(DSN);
+    conn.createTransaction();
+
+    
+
+    /*
 
     con->setSchema("chess_board");
 
@@ -93,5 +93,8 @@ int main()
     delete pstmt;
     delete con;
     system("pause");
+
+    */
+
     return 0;
 }

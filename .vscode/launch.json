@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "make start/code",
+            "name":"debug code",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "command": "make start/database",
+            "name":"debug database",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+    ]
+}
