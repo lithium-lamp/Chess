@@ -1,6 +1,6 @@
 #include "chess.h"
 
-Chess::Chess(const std::string& current_board_state) : move_counter { 0 } {
+Chess::Chess(const std::string& current_board_state) : move_counter { 0 }, finishedGame { false } {
     set_board_vector(current_board_state);
 }
 
@@ -47,6 +47,12 @@ void Chess::playMove() {
 
     std::cout << "Enter next move: ";
     std::cin >> userinput;
+
+    if (userinput == "exit") {
+        finishedGame = true;
+
+        return;
+    }
 
     std::string piecesquare = userinput.substr(0, 2);
 

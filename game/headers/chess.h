@@ -62,4 +62,6 @@ public:
 
 	std::vector<int> getDir(Piece piece, int change_value, bool repeating);
 	int move_counter;
+
+	bool finishedGame;
 };

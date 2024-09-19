@@ -50,16 +50,13 @@ int main() {
 
     Chess c { defaultFen };
     
-    c.printBoard();
-    c.printRefBoard();
+    while (!c.finishedGame) {
+        c.printBoard();
+        c.printRefBoard();
 
-    while (inPlay) {
         c.playMove();
 
         conn.insertMove(game_id, c.getFen());
-
-        c.printBoard();
-        c.printRefBoard();
     }
 
     return 0;

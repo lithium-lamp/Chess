@@ -28,9 +28,24 @@ start/database:
 	@echo 'Initializing database'
 	docker compose up
 
+## start/reset: Reset everything and start code
+.PHONY: start/reset
+start/reset: confirm
+	@echo 'RESETTING EVERYTHING'
+	make data/migratedown
+	make data/migrateup
+	make data/createusers
+	make start/code
+
 # ==================================================================================== #
 # DATA
 # ==================================================================================== #
+
+## data/createusers: Create test users
+.PHONY: data/createusers
+data/createusers:
+	@echo 'Creating test users'
+	g++ -std=c++20 -o output/program/createusers.o database/testing/createusers.cpp `pkg-config --cflags --libs libpqxx` -I include/laserpants/dotenv -I database/headers && clear && ./output/program/createusers.o
 
 ## data/migrateup: Migrate up
 .PHONY: data/migrateup
