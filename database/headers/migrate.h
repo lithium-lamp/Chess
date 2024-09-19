@@ -1,5 +1,5 @@
 ///
-/// \file migratedown.h
+/// \file migrate.h
 ///
 
 #pragma once
@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <set>
 
 void addSchema(pqxx::connection* conn, const std::string& path) {
 	std::ifstream MyReadFile(path);
@@ -17,7 +18,7 @@ void addSchema(pqxx::connection* conn, const std::string& path) {
 	while (std::getline(MyReadFile, r)) {
 		total += r;
 	}
-	
+
 	pqxx::work w(*conn);
 
 	w.exec(total);
@@ -49,10 +50,16 @@ void migrateup(pqxx::connection* conn) {
 
 	int counter = 0;
 
+	std::set<std::filesystem::path> sorted_by_name;
+
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
-		std::string s = entry.path();
-		addSchema(conn, s);
+		sorted_by_name.insert(entry.path());
+
 		counter++;
+	}
+
+	for (auto &filename : sorted_by_name) {
+		addSchema(conn, filename.c_str());
 	}
 
 	std::cout << "finished migrating up, " << counter << " files processed." << std::endl;
@@ -65,10 +72,16 @@ void migratedown(pqxx::connection* conn) {
 
 	int counter = 0;
 
+	std::set<std::filesystem::path> sorted_by_name;
+
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
-		std::string s = entry.path();
-		deleteSchema(conn, s);
+		sorted_by_name.insert(entry.path());
+
 		counter++;
+	}
+
+	 for (auto rit = sorted_by_name.rbegin(); rit != sorted_by_name.rend(); rit++)  {
+		deleteSchema(conn, (*rit).c_str());
 	}
 
 	std::cout << "finished migrating down, " << counter << " files processed." << std::endl;

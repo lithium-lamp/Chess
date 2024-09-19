@@ -1,4 +1,4 @@
-#include "game/headers/chess.h"
+#include "chess.h"
 
 std::vector<int> Chess::rookSquares(Piece rook) {
 	std::vector<int> all_indexes {-8, -1, 1, 8};

@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS all_chess_games;

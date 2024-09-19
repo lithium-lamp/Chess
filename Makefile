@@ -20,7 +20,7 @@ confirm:
 .PHONY: start/code
 start/code:
 	@echo 'Initializing code'
-	g++ -std=c++20 -o output/program/main.o main.cpp `pkg-config --cflags --libs libpqxx` -I include/laserpants/dotenv -I database/headers && clear && ./output/program/main.o
+	g++ -std=c++20 -o output/program/main.o main.cpp game/functions/chess.cpp game/functions/chess_moves.cpp `pkg-config --cflags --libs libpqxx` -I include/laserpants/dotenv -I database/headers -I game/headers && clear && ./output/program/main.o
 
 ## start/database: Initialize database
 .PHONY: start/database

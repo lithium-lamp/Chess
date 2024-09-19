@@ -1,4 +1,4 @@
-#include "game/headers/chess.h"
+#include "chess.h"
 
 Chess::Chess(const std::string& current_board_state) : move_counter { 0 } {
     set_board_vector(current_board_state);

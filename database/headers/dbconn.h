@@ -10,14 +10,36 @@ public:
 		
 	}
 
-	void createTransaction() {
+	int createUser(const std::string& username) {
 		pqxx::work w(conn);
 
-		pqxx::row r = w.exec1("SELECT 1");
+		pqxx::row r = w.exec1("INSERT INTO users(name) VALUES ('" + username + "') RETURNING id");
 
 		w.commit();
-	
-		std::cout << r[0].as<int>() << std::endl;
+
+		return r[0].as<int>();
+	}
+
+	int createGame(int user_id1, int user_id2) {
+		pqxx::work w(conn);
+
+		std::string s = std::to_string(user_id1) + ", " + std::to_string(user_id2);
+
+		pqxx::row r = w.exec1("INSERT INTO all_chess_games(user_id1, user_id2, version) VALUES (" + s + ", 1) RETURNING id");
+
+		w.commit();
+
+		return r[0].as<int>();
+	}
+
+	void insertMove(int all_games_id, const std::string& fen) {
+		pqxx::work w(conn);
+
+		std::string s = std::to_string(all_games_id) + ", '" + fen + "'";
+
+		w.exec("INSERT INTO chess_game(all_games_id, fen, version) VALUES (" + s + ", 1)");
+
+		w.commit();
 	}
 
 	pqxx::connection conn;

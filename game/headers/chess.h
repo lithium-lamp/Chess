@@ -1,3 +1,7 @@
+///
+/// \file chess.h
+///
+
 #pragma once
 
 #include <vector>
@@ -13,7 +17,7 @@ struct Piece {
 class Chess {
 public:
 	Chess(const std::string& current_board_state);
-
+	
 	void printBoard();
 
 	void printRefBoard();

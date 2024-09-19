@@ -3,8 +3,7 @@
 #include <pqxx/pqxx>
 #include "dotenv.h"
 #include "dbconn.h"
-
-#include "game/headers/chess.h"
+#include "chess.h"
 
 /* .env variables
 
@@ -31,70 +30,37 @@ int main() {
     const char* DSN[] {caught_dsn};
 
     DBConn conn(DSN);
-    conn.createTransaction();
 
+    int user_id1 = 1;
+    int user_id2 = 2;
+
+    // if users do not exist, create them
+    // user_id1 = conn.createUser("matt");
+    // user_id2 = conn.createUser("jeff");
+
+    int game_id = 1;
+
+    std::string defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+
+    game_id = conn.createGame(user_id1, user_id2);
+
+    conn.insertMove(game_id, defaultFen);
     
+    bool inPlay = true;
 
-    /*
-
-    con->setSchema("chess_board");
-
-    stmt = con->createStatement();
-    stmt->execute("DROP TABLE IF EXISTS board_data_server");
-    stmt->execute("CREATE TABLE board_data_server (id serial PRIMARY KEY, board_state VARCHAR(50), time_stamp VARCHAR(50));");
-
-    string timestamp = "";
-
-    res = stmt->executeQuery("SELECT UTC_TIMESTAMP");
-    while (res->next()) {
-        timestamp = res->getString("UTC_TIMESTAMP");
-    }
-
-    pstmt = con->prepareStatement("INSERT INTO board_data_server(board_state, time_stamp) VALUES(?,?)");
-    pstmt->setString(1, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-    pstmt->setString(2, timestamp);
-    pstmt->execute();
+    Chess c { defaultFen };
     
-    string current_board_state = "";
-
-    res = stmt->executeQuery("SELECT board_state FROM board_data_server");
-    while (res->next()) {
-        current_board_state = res->getString("board_state");
-    }
-
-    Chess c { current_board_state };
-
     c.printBoard();
     c.printRefBoard();
 
-    while (true) { //play game
+    while (inPlay) {
         c.playMove();
 
-        //push to server
-
-        timestamp = "";
-
-        res = stmt->executeQuery("SELECT UTC_TIMESTAMP");
-        while (res->next()) {
-            timestamp = res->getString("UTC_TIMESTAMP");
-        }
-
-        pstmt->setString(1, c.getFen());
-        pstmt->setString(2, timestamp);
-        
-        pstmt->execute();
+        conn.insertMove(game_id, c.getFen());
 
         c.printBoard();
         c.printRefBoard();
     }
-    
-    //delete res;
-    delete stmt;
-    delete pstmt;
-    delete con;
-    system("pause");
-
-    */
 
     return 0;
 }
