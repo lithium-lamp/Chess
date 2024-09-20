@@ -1,6 +1,6 @@
 #include "chess.h"
 
-Chess::Chess(const std::string& current_board_state) : move_counter { 0 }, finishedGame { false } {
+Chess::Chess(const std::string& current_board_state, int move, bool finishedgame) : move_counter { move }, finishedGame { finishedgame } {
     set_board_vector(current_board_state);
 }
 
@@ -42,16 +42,11 @@ bool Chess::isWhiteTurn() {
     return move_counter % 2 == 0;
 }
 
-void Chess::playMove() {
-    std::string userinput;
-
-    std::cout << "Enter next move: ";
-    std::cin >> userinput;
-
+int Chess::playMove(const std::string& userinput) { //returns result type
     if (userinput == "exit") {
         finishedGame = true;
 
-        return;
+        return -1;
     }
 
     std::string piecesquare = userinput.substr(0, 2);
@@ -66,12 +61,20 @@ void Chess::playMove() {
     bool a = islower(piece.piece_declaration) != isWhiteTurn();
     bool b = isLegalMove(piece, squareIndex);
 
-    if (a && b)
+    if (a && b) {
         movePiece(piece, squareIndex);
-    else if (!a)
+        return 0;
+    }
+    else if (!a) {
         std::cout << "Wrong player attempting to make move." << std::endl;
-    else if (!b)
+        return 1;
+    }
+    else if (!b) {
         std::cout << "This is not a legal move." << std::endl;
+        return 2;
+    }
+
+    return 3;
 }
 
 void Chess::movePiece(Piece piece, int squareIndex) {

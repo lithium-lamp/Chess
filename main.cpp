@@ -30,9 +30,16 @@ int main() {
     const char* DSN[] {caught_dsn};
 
     DBConn conn(DSN);
+    
+    return 0;
 
     int user_id1 = 1;
     int user_id2 = 2;
+
+    //Json::Value root;
+    //std::cin >> root;
+
+    //std::cout << root << std::endl;
 
     // if users do not exist, create them
     // user_id1 = conn.createUser("matt");

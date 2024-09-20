@@ -16,7 +16,8 @@ struct Piece {
 
 class Chess {
 public:
-	Chess(const std::string& current_board_state);
+	Chess(const std::string& current_board_state = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", 
+		int move = 0, bool finishedgame = false);
 	
 	void printBoard();
 
@@ -24,7 +25,7 @@ public:
 
 	void set_board_vector(const std::string& current_board_state);
 
-	void playMove();
+	int playMove(const std::string& userinput);
 
 	bool isInCheck(const std::vector<Piece>& board);
 

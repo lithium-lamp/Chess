@@ -16,17 +16,22 @@ confirm:
 # START
 # ==================================================================================== #
 
-## start/code: Initialize code
-.PHONY: start/code
-start/code:
-	@echo 'Initializing code'
-	g++ -std=c++20 -o output/program/main.o main.cpp game/functions/chess.cpp game/functions/chess_moves.cpp `pkg-config --cflags --libs libpqxx` -I include/laserpants/dotenv -I database/headers -I game/headers && clear && ./output/program/main.o
-
 ## start/database: Initialize database
 .PHONY: start/database
 start/database:
 	@echo 'Initializing database'
 	docker compose up
+
+## start/api: Initialize api
+.PHONY: start/api
+start/api:
+	@echo 'Initializing api'
+	g++ -std=c++20 -o output/program/api.o api/session.cpp -lpthread \
+	game/functions/chess.cpp game/functions/chess_moves.cpp \
+	`pkg-config --cflags --libs libpqxx jsoncpp` -I include/laserpants/dotenv \
+	-I database/headers -I game/headers -I api/headers \
+	-I include/crowcpp -I /opt/homebrew/Cellar/asio/1.30.2/include \
+	&& clear && ./output/program/api.o
 
 ## start/reset: Reset everything and start code
 .PHONY: start/reset
@@ -35,7 +40,7 @@ start/reset: confirm
 	make data/migratedown
 	make data/migrateup
 	make data/createusers
-	make start/code
+	make start/api
 
 # ==================================================================================== #
 # DATA
